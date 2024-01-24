@@ -4,8 +4,15 @@ namespace JsonPointer;
 
 final class DocumentFactory
 {
-	public function createFromFile(string $file): DocumentInterface
+	public function __construct(
+		private ?string $root = null,
+	) {}
+
+	public function createFromFile(string $file): Document&WritableDocument
 	{
+		if ($this->root && !file_exists($file)) {
+			$file = $this->root . ltrim($file, '.');
+		}
 		if (!file_exists($file)) {
 			throw new \InvalidArgumentException('File not found');
 		}
