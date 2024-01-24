@@ -8,6 +8,18 @@ final class DocumentFactory
 		private ?string $root = null,
 	) {}
 
+	public function createFromReference(Reference $reference): Document&WritableDocument
+	{
+		if (!$reference->isExternal()) {
+			throw new \InvalidArgumentException('Can only resolve external references files');
+		}
+		$file = $this->root . ltrim($reference->getUri(), '.');
+		if (!file_exists($file)) {
+			throw new \InvalidArgumentException('File not found: ' . $file);
+		}
+		return $this->createFromFile($file);
+	}
+
 	public function createFromFile(string $file): Document&WritableDocument
 	{
 		if ($this->root && !file_exists($file)) {
