@@ -4,8 +4,8 @@ namespace JsonPointer\Exceptions;
 
 final class Path extends \RuntimeException
 {
-	public static function notFound(): self
+	public static function notFound(string $path = null): self
 	{
-		return new self('Json path to value not found');
+		return new self('Json path to value not found. ' . $path);
 	}
 }
