@@ -30,9 +30,15 @@ final readonly class Reference
 
 	public function getName(): string
 	{
-		$parts = array_filter(explode('/', $this->path));
+		if ($this->path) {
+			$parts = array_filter(explode('/', $this->path));
+			return end($parts);
+		}
+		elseif ($this->uri) {
+			return pathinfo($this->uri, PATHINFO_FILENAME);
+		}
 
-		return end($parts);
+		throw new \BadMethodCallException('Can\'t find a name for reference');
 	}
 
 	public function getPath(): string
