@@ -1,20 +1,20 @@
 {
-    "name": "stefna/json-pointer",
-    "description": "",
-    "type": "library",
-    "authors": [
-        {
-            "name": "Andreas Sundqvist",
-            "email": "andreas@stefna.is"
-        }
-    ],
-    "require": {
-        "php": ">=7.1.0",
-        "ext-json": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "JsonPointer\\": "src/"
-        }
-    }
+	"name": "stefna/json-pointer",
+	"description": "",
+	"type": "library",
+	"authors": [
+		{
+			"name": "Andreas Sundqvist",
+			"email": "andreas@stefna.is"
+		}
+	],
+	"require": {
+		"php": "^8.2",
+		"ext-json": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"JsonPointer\\": "src/"
+		}
+	}
 }
