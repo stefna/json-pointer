@@ -2,7 +2,9 @@
 
 namespace JsonPointer;
 
-final class DocumentFactory
+use JsonPointer\Exceptions\DocumentParseError;
+
+final readonly class DocumentFactory
 {
 	public function __construct(
 		private ?string $root = null,
@@ -15,7 +17,7 @@ final class DocumentFactory
 		}
 		$file = $this->root . ltrim($reference->getUri(), '.');
 		if (!file_exists($file)) {
-			throw new \InvalidArgumentException('File not found: ' . $file);
+			throw DocumentParseError::fileNotFound($file);
 		}
 		return $this->createFromFile($file);
 	}
@@ -26,18 +28,26 @@ final class DocumentFactory
 			$file = $this->root . ltrim($file, '.');
 		}
 		if (!file_exists($file)) {
-			throw new \InvalidArgumentException('File not found');
+			throw DocumentParseError::fileNotFound($file);
 		}
 
 		$content = file_get_contents($file);
-		$json = json_decode($content, true);
-		if (!$json || !is_array($json)) {
-			throw new \InvalidArgumentException('File don\'t seam to contain a valid json document');
+		if (str_ends_with($file, '.json')) {
+			$doc = json_decode($content, true);
 		}
-		return $this->createFromArray(basename($file), $json);
+		elseif (function_exists('yaml_parse')) {
+			$doc = yaml_parse($content);
+		}
+		else {
+			throw DocumentParseError::unknownFormat(substr($file, strrpos($file, '.') ?: 0));
+		}
+		if (!$doc || !is_array($doc)) {
+			throw DocumentParseError::invalidContent();
+		}
+		return $this->createFromArray(basename($file), $doc);
 	}
 
-	public function createFromArray(string $id, array $data): DocumentInterface
+	public function createFromArray(string $id, array $data): Document&WritableDocument
 	{
 		if (isset($data['$id'])) {
 			$id = rtrim($data['$id'], '/') . '/' . $id;
@@ -46,6 +56,6 @@ final class DocumentFactory
 			$id = rtrim($data['id'], '/') . '/' . $id;
 		}
 
-		return new Document($id, $data);
+		return new BasicDocument($id, $data);
 	}
 }
