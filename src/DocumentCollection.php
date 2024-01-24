@@ -7,6 +7,7 @@ use JsonPointer\Exceptions\Path;
 final class DocumentCollection implements Document
 {
 	/** @var Document[] */
+	private array $documents;
 
 	public function __construct(Document ...$schemas)
 	{
@@ -28,7 +29,7 @@ final class DocumentCollection implements Document
 		return false;
 	}
 
-	public function resolveReference(Reference $ref)
+	public function resolveReference(Reference $ref): mixed
 	{
 		foreach ($this->documents as $document) {
 			if (!$document->canResolveReference($ref)) {
@@ -57,7 +58,7 @@ final class DocumentCollection implements Document
 		return false;
 	}
 
-	public function get(string $path = '')
+	public function get(string $path = ''): mixed
 	{
 		foreach ($this->documents as $document) {
 			if ($document->has($path)) {
@@ -67,7 +68,7 @@ final class DocumentCollection implements Document
 		return null;
 	}
 
-	public function findPathToParent(string $field, $searchValue): string
+	public function findPathToParent(string $field, mixed $searchValue): string
 	{
 		$exception = null;
 		foreach ($this->documents as $document) {
