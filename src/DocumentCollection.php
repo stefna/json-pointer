@@ -4,17 +4,16 @@ namespace JsonPointer;
 
 use JsonPointer\Exceptions\Path;
 
-final class DocumentCollection implements DocumentInterface
+final class DocumentCollection implements Document
 {
-	/** @var DocumentInterface[] */
-	private $documents;
+	/** @var Document[] */
 
-	public function __construct(DocumentInterface ...$schemas)
+	public function __construct(Document ...$schemas)
 	{
 		$this->documents = $schemas;
 	}
 
-	public function addDocument(DocumentInterface $document): void
+	public function addDocument(Document $document): void
 	{
 		$this->documents[] = $document;
 	}
