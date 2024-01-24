@@ -6,21 +6,12 @@ use JsonPointer\Exceptions\Reference;
 
 final class ReferencedValue
 {
-	/** @var array|VoidValue */
-	private $owner;
-	/** @var string|null */
-	private $token;
-	/** @var ArrayAccessor|null */
-	private $accessor;
-
-	public function __construct($owner, ?string $token = null, ArrayAccessor $accessor = null)
-	{
-		$this->owner = $owner;
-		$this->token = $token;
-		$this->accessor = $accessor;
-
+	public function __construct(
+		private array|VoidValue $owner,
+		private readonly ?string $token = null,
+		private readonly ?ArrayAccessor $accessor = null,
+	) {
 		$this->assertPropertiesAccessible();
-
 		$this->assertAccessorCovers();
 	}
 

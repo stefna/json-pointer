@@ -2,22 +2,15 @@
 
 namespace JsonPointer;
 
-final class Reference
+final readonly class Reference
 {
 	private const TYPE_ID = 'id';
 	private const TYPE_INTERNAL = 'internal';
 	private const TYPE_EXTERNAL = 'external';
 
-	/** @var string */
-	private $type;
-	/** @var string */
-	private $path;
-	/** @var string|null */
-	private $uri;
-
 	public static function fromString(string $path): self
 	{
-		if (strpos($path, '#') === 0) {
+		if (str_starts_with($path, '#')) {
 			if (strpos($path, '/') === 1) {
 				return new self(self::TYPE_INTERNAL, substr($path, 1));
 			}
@@ -29,12 +22,11 @@ final class Reference
 		return new self(self::TYPE_EXTERNAL, $externalPath, str_replace('#' . $externalPath, '', $path));
 	}
 
-	private function __construct(string $type, string $path, string $uri = null)
-	{
-		$this->type = $type;
-		$this->path = $path;
-		$this->uri = $uri;
-	}
+	private function __construct(
+		private string $type,
+		private string $path,
+		private ?string $uri = null,
+	) {}
 
 	public function getName(): string
 	{
