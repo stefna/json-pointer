@@ -19,7 +19,11 @@ final readonly class Reference
 		}
 
 		$externalPath = parse_url($path, PHP_URL_FRAGMENT) ?? '';
-		return new self(self::TYPE_EXTERNAL, $externalPath, str_replace('#' . $externalPath, '', $path));
+		return new self(
+			self::TYPE_EXTERNAL,
+			$externalPath ?: $path,
+			str_replace('#' . $externalPath, '', $path)
+		);
 	}
 
 	private function __construct(
