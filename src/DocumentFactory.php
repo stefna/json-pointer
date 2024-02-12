@@ -65,7 +65,7 @@ final readonly class DocumentFactory
 			return null;
 		}
 		if ($ref instanceof Reference) {
-			if ($ref->isExternal()) {
+			if (!$ref->isExternal()) {
 				return null;
 			}
 			$ref = $ref->getUri();
