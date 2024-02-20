@@ -17,8 +17,19 @@ final class DocumentParseError extends \RuntimeException
 		));
 	}
 
-	public static function invalidContent(): self
+	public static function invalidContent(string $file, string $errorMessage = null): self
 	{
-		return new self('File don\'t seam to contain a valid json/yaml document');
+		$message = sprintf(
+			'File "%s" don\'t seam to contain a valid json/yaml document',
+			$file,
+		);
+		if ($errorMessage) {
+			$message .= PHP_EOL;
+			$message .= sprintf(
+				'Error: %s',
+				$errorMessage,
+			);
+		}
+		return new self($message);
 	}
 }

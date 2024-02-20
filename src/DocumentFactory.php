@@ -32,8 +32,10 @@ final readonly class DocumentFactory
 		}
 
 		$content = file_get_contents($file);
+		$errorMessage = null;
 		if (str_ends_with($file, '.json')) {
 			$doc = json_decode($content, true);
+			$errorMessage = json_last_error_msg();
 		}
 		elseif (function_exists('yaml_parse')) {
 			$doc = yaml_parse($content);
@@ -42,7 +44,7 @@ final readonly class DocumentFactory
 			throw DocumentParseError::unknownFormat(substr($file, strrpos($file, '.') ?: 0));
 		}
 		if (!$doc || !is_array($doc)) {
-			throw DocumentParseError::invalidContent();
+			throw DocumentParseError::invalidContent(basename($file), $errorMessage);
 		}
 		return $this->createFromArray(basename($file), $doc);
 	}
