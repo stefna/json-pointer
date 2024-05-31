@@ -58,7 +58,7 @@ final class ReferencedValue
 		}
 
 		if (!$this->accessor->hasValue($this->owner, $this->token)) {
-			throw Reference::elementNotFound();
+			throw Reference::elementNotFound($this->token);
 		}
 	}
 

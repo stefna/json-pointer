@@ -14,8 +14,8 @@ final class Reference extends \RuntimeException
 		return new self('Referenced value does not exist');
 	}
 
-	public static function elementNotFound(): self
+	public static function elementNotFound(string $element): self
 	{
-		return new self('Referenced value does not exist');
+		return new self(sprintf('Referenced element does not exist: %s', $element));
 	}
 }
