@@ -12,6 +12,8 @@ interface Document
 
 	public function findPathToParent(string $field, mixed $searchValue): string;
 
+	public function findAllPaths(string $query): array;
+
 	public function canResolveReference(Reference $ref): bool;
 
 	public function resolveReference(Reference $ref): mixed;

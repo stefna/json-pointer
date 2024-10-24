@@ -47,6 +47,25 @@ final class BasicDocument implements Document, WritableDocument
 		$document = $value;
 	}
 
+	public function add(string $path, mixed $value): void
+	{
+		$paths = explode('/', trim($path, '/'));
+		$lastKey = array_key_last($paths);
+		$document = &$this->document;
+		foreach ($paths as $index => $key) {
+			$key = urldecode($key);
+			if ($index === $lastKey) {
+				$document = &$document[$key];
+				break;
+			}
+			if (!isset($document[$key])) {
+				throw Path::notFound($path);
+			}
+			$document = &$document[$key];
+		}
+		$document = $value;
+	}
+
 	public function findPathToParent(string $field, mixed $searchValue): string
 	{
 		$values = $this->findAll($this->document, $field);
@@ -108,7 +127,10 @@ final class BasicDocument implements Document, WritableDocument
 	{
 		$return = [];
 		foreach ($document as $field => $value) {
-			if (is_array($value)) {
+			if ($searchField === $field) {
+				$return['/' . $field] = $value;
+			}
+			elseif (is_array($value)) {
 				$rs = $this->findAll($value, $searchField);
 				foreach ($rs as $resultField => $resultValue) {
 					if (str_contains((string)$field, '/')) {
@@ -116,9 +138,6 @@ final class BasicDocument implements Document, WritableDocument
 					}
 					$return['/' . $field . $resultField] = $resultValue;
 				}
-			}
-			elseif ($searchField === $field) {
-				$return['/' . $field] = $value;
 			}
 		}
 		return $return;
@@ -181,5 +200,10 @@ final class BasicDocument implements Document, WritableDocument
 		}
 
 		return str_replace(['~1', '~0'], ['/', '~'], $token);
+	}
+
+	public function findAllPaths(string $query): array
+	{
+		return $this->findAll($this->document, $query);
 	}
 }

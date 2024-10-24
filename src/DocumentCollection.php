@@ -84,4 +84,16 @@ final class DocumentCollection implements Document
 		}
 		return '';
 	}
+
+	public function findAllPaths(string $query): array
+	{
+		$result = [];
+		foreach ($this->documents as $document) {
+			$subResult = $document->findAllPaths($query);
+			foreach ($subResult as $path => $value) {
+				$result[$path] = $value;
+			}
+		}
+		return $result;
+	}
 }
