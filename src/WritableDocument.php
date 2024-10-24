@@ -14,4 +14,6 @@ interface WritableDocument
 	public function findAllReferences(): array;
 
 	public function set(string $path, mixed $value): void;
+
+	public function add(string $path, mixed $value): void;
 }
