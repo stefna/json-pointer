@@ -4,30 +4,35 @@ namespace JsonPointer;
 
 final readonly class Reference
 {
-	private const TYPE_ID = 'id';
-	private const TYPE_INTERNAL = 'internal';
-	private const TYPE_EXTERNAL = 'external';
-
 	public static function fromString(string $path): self
 	{
 		if (str_starts_with($path, '#')) {
 			if (strpos($path, '/') === 1) {
-				return new self(self::TYPE_INTERNAL, substr($path, 1));
+				return new self(ReferenceType::Internal, substr($path, 1));
 			}
 
-			return new self(self::TYPE_ID, substr($path, 1));
+			return new self(ReferenceType::Id, substr($path, 1));
+		}
+
+		if (str_contains($path, ':') && !str_contains($path, '://')) {
+			[$part1, $path] = explode(':', $path, 2);
+			return new self(
+				ReferenceType::External,
+				$part1,
+				$path,
+			);
 		}
 
 		$externalPath = parse_url($path, PHP_URL_FRAGMENT) ?? '';
 		return new self(
-			self::TYPE_EXTERNAL,
+			ReferenceType::External,
 			$externalPath ?: $path,
 			str_replace('#' . $externalPath, '', $path)
 		);
 	}
 
 	private function __construct(
-		private string $type,
+		private ReferenceType $type,
 		private string $path,
 		private ?string $uri = null,
 	) {}
@@ -52,12 +57,12 @@ final readonly class Reference
 
 	public function isInternal(): bool
 	{
-		return $this->type === self::TYPE_INTERNAL;
+		return $this->type === ReferenceType::Internal;
 	}
 
 	public function isExternal(): bool
 	{
-		return $this->type === self::TYPE_EXTERNAL;
+		return $this->type === ReferenceType::External;
 	}
 
 	public function getUri(): string

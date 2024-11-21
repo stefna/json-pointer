@@ -1,0 +1,5 @@
+{
+	"Status": {
+		"$ref": "./schema/models/Status.json"
+	}
+}

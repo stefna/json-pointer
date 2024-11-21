@@ -1,0 +1,46 @@
+<?php declare(strict_types=1);
+
+namespace JsonPointer\ReferenceResolver;
+
+use JsonPointer\Document;
+use JsonPointer\Exceptions\DocumentParseError;
+use JsonPointer\Reference;
+
+final class ReferenceResolverCollection implements ReferenceResolver
+{
+	/** @var ReferenceResolver[] */
+	private array $referenceResolvers;
+
+	public function __construct(
+		ReferenceResolver ... $referenceResolvers,
+	) {
+		$this->referenceResolvers = $referenceResolvers;
+	}
+
+	public function supports(Reference $reference): bool
+	{
+		foreach ($this->referenceResolvers as $referenceResolver) {
+			if ($referenceResolver->supports($reference)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function resolve(Reference $reference): Document
+	{
+		foreach ($this->referenceResolvers as $referenceResolver) {
+			if ($referenceResolver->supports($reference)) {
+				try {
+					return $referenceResolver->resolve($reference);
+				}
+				catch (\Throwable) {}
+			}
+		}
+
+		throw DocumentParseError::fileNotFound($reference->getUri());
+	}
+}

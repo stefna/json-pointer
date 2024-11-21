@@ -6,16 +6,15 @@ use JsonPointer\Exceptions\DocumentParseError;
 
 final readonly class DocumentFactory
 {
-	public function __construct(
-		private ?string $root = null,
-	) {}
-
+	/**
+	 * @deprecated use ReferenceResolver instead
+	 */
 	public function createFromReference(Reference $reference): Document&WritableDocument
 	{
 		if (!$reference->isExternal()) {
 			throw new \InvalidArgumentException('Can only resolve external references files');
 		}
-		$file = $this->root . ltrim($reference->getUri(), '.');
+		$file = ltrim($reference->getUri(), '.');
 		if (!file_exists($file)) {
 			throw DocumentParseError::fileNotFound($file);
 		}
@@ -24,9 +23,6 @@ final readonly class DocumentFactory
 
 	public function createFromFile(string $file): Document&WritableDocument
 	{
-		if ($this->root && !file_exists($file)) {
-			$file = $this->root . ltrim($file, '.');
-		}
 		if (!file_exists($file)) {
 			throw DocumentParseError::fileNotFound($file);
 		}
@@ -59,27 +55,5 @@ final readonly class DocumentFactory
 		}
 
 		return new BasicDocument($id, $data);
-	}
-
-	public function findRoot(string|Reference $ref): ?string
-	{
-		if (!$this->root) {
-			return null;
-		}
-		if ($ref instanceof Reference) {
-			if (!$ref->isExternal()) {
-				return null;
-			}
-			$ref = $ref->getUri();
-		}
-
-		$file = $this->root . ltrim($ref, '.');
-		$info = pathinfo($file);
-
-		if ($info['dirname'] . DIRECTORY_SEPARATOR === $this->root) {
-			return null;
-		}
-
-		return substr($info['dirname'], strlen($this->root));
 	}
 }
