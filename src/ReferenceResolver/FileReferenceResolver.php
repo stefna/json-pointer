@@ -27,7 +27,8 @@ final readonly class FileReferenceResolver implements ReferenceResolver
 	public function resolve(Reference $reference): Document
 	{
 		$file = $this->root . ltrim($reference->getUri(), '.');
-
-		return $this->documentFactory->createFromFile($file);
+		$doc = $this->documentFactory->createFromFile($file);
+		$reference->setRoot(basename($this->root));
+		return $doc;
 	}
 }

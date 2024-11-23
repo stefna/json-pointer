@@ -1,5 +1,5 @@
 {
 	"Status": {
-		"$ref": "./schema/models/Status.json"
+		"$ref": "schema/models/Status.json"
 	}
 }

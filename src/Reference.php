@@ -2,7 +2,7 @@
 
 namespace JsonPointer;
 
-final readonly class Reference
+final class Reference
 {
 	public static function fromString(string $path): self
 	{
@@ -32,9 +32,10 @@ final readonly class Reference
 	}
 
 	private function __construct(
-		private ReferenceType $type,
-		private string $path,
-		private ?string $uri = null,
+		private readonly ReferenceType $type,
+		private readonly string $path,
+		private readonly ?string $uri = null,
+		private ?string $root = null,
 	) {}
 
 	public function getName(): string
@@ -68,5 +69,15 @@ final readonly class Reference
 	public function getUri(): string
 	{
 		return (string)$this->uri;
+	}
+
+	public function setRoot(?string $root): void
+	{
+		$this->root = $root;
+	}
+
+	public function getRoot(): string
+	{
+		return $this->root ?? dirname($this->path);
 	}
 }

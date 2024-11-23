@@ -6,12 +6,13 @@ use JsonPointer\Document;
 use JsonPointer\DocumentFactory;
 use JsonPointer\Reference;
 
-final readonly class Package
+final class Package
 {
-	private DocumentFactory $documentFactory;
+	private readonly DocumentFactory $documentFactory;
+	public ?string $packageRoot = null;
 
 	public function __construct(
-		private string $folder,
+		private readonly string $folder,
 	) {
 		$this->documentFactory = new DocumentFactory();
 	}
@@ -62,8 +63,9 @@ final readonly class Package
 
 	private function resolveExternalPackageReference(Reference $packageReference): false|Document
 	{
-		$referenceFile = $this->folder . DIRECTORY_SEPARATOR . $packageReference->getPath();
+		$referenceFile = $this->folder . DIRECTORY_SEPARATOR . ltrim($packageReference->getPath(), './');
 		if (file_exists($referenceFile)) {
+			$this->packageRoot = dirname($referenceFile);
 			return $this->documentFactory->createFromFile($referenceFile);
 		}
 		$testFiles = [
@@ -73,6 +75,7 @@ final readonly class Package
 		];
 		foreach ($testFiles as $testFile) {
 			if (file_exists($testFile)) {
+				$this->packageRoot = dirname($testFile);
 				return $this->documentFactory->createFromFile($testFile);
 			}
 		}
