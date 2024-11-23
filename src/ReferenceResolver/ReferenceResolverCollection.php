@@ -17,6 +17,11 @@ final class ReferenceResolverCollection implements ReferenceResolver
 		$this->referenceResolvers = $referenceResolvers;
 	}
 
+	public function addResolver(ReferenceResolver $resolver): void
+	{
+		$this->referenceResolvers[] = $resolver;
+	}
+
 	public function supports(Reference $reference): bool
 	{
 		foreach ($this->referenceResolvers as $referenceResolver) {
