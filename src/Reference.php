@@ -17,7 +17,7 @@ final class Reference
 		if (str_contains($path, ':') && !str_contains($path, '://')) {
 			[$part1, $path] = explode(':', $path, 2);
 			return new self(
-				ReferenceType::External,
+				ReferenceType::ComplexExternal,
 				$part1,
 				$path,
 			);
@@ -40,6 +40,9 @@ final class Reference
 
 	public function getName(): string
 	{
+		if ($this->type === ReferenceType::ComplexExternal) {
+			return pathinfo($this->uri, PATHINFO_FILENAME);
+		}
 		if ($this->path) {
 			$parts = array_filter(explode('/', $this->path));
 			return end($parts);
@@ -63,7 +66,7 @@ final class Reference
 
 	public function isExternal(): bool
 	{
-		return $this->type === ReferenceType::External;
+		return $this->type === ReferenceType::External || $this->type === ReferenceType::ComplexExternal;
 	}
 
 	public function getUri(): string

@@ -7,4 +7,5 @@ enum ReferenceType
 	case Id;
 	case Internal;
 	case External;
+	case ComplexExternal;
 }
