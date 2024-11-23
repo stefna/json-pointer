@@ -37,15 +37,16 @@ final class ReferenceResolverCollection implements ReferenceResolver
 	 */
 	public function resolve(Reference $reference): Document
 	{
+		$e = null;
 		foreach ($this->referenceResolvers as $referenceResolver) {
 			if ($referenceResolver->supports($reference)) {
 				try {
 					return $referenceResolver->resolve($reference);
 				}
-				catch (\Throwable) {}
+				catch (\Throwable $e) {}
 			}
 		}
 
-		throw DocumentParseError::fileNotFound($reference->getUri());
+		throw DocumentParseError::fileNotFound($reference->getUri(), $e);
 	}
 }

@@ -4,9 +4,9 @@ namespace JsonPointer\Exceptions;
 
 final class DocumentParseError extends \RuntimeException
 {
-	public static function fileNotFound(string $path): self
+	public static function fileNotFound(string $path, ?\Throwable $previous = null): self
 	{
-		return new self('File not found: ' . $path);
+		return new self('File not found: ' . $path, previous: $previous);
 	}
 
 	public static function unknownFormat(string $format): self
