@@ -7,6 +7,18 @@ use JsonPointer\Exceptions\Path;
 
 final class BasicDocument implements Document, WritableDocument
 {
+	public static function fromDocument(Document $document): self
+	{
+		if ($document instanceof self) {
+			return $document;
+		}
+
+		return new self(
+			$document->getId(),
+			$document->get(),
+		);
+	}
+
 	public function __construct(
 		private string $id,
 		private array $document,
