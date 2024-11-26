@@ -6,6 +6,36 @@ use JsonPointer\Exceptions\DocumentParseError;
 
 final readonly class DocumentFactory
 {
+	public function __construct(
+		/** @deprecated use ReferenceResolver instead */
+		private ?string $root = null,
+	) {}
+
+	/**
+	 * @deprecated use ReferenceResolver instead
+	 */
+	public function findRoot(string|Reference $ref): ?string
+	{
+		if (!$this->root) {
+			return null;
+		}
+		if ($ref instanceof Reference) {
+			if (!$ref->isExternal()) {
+				return null;
+			}
+			$ref = $ref->getUri();
+		}
+
+		$file = $this->root . ltrim($ref, '.');
+		$info = pathinfo($file);
+
+		if ($info['dirname'] . DIRECTORY_SEPARATOR === $this->root) {
+			return null;
+		}
+
+		return substr($info['dirname'], strlen($this->root));
+	}
+
 	/**
 	 * @deprecated use ReferenceResolver instead
 	 */
