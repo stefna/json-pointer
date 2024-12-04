@@ -21,6 +21,7 @@ final class BasicDocument implements Document, WritableDocument
 
 	public function __construct(
 		private string $id,
+		/** @var array<string, mixed> */
 		private array $document,
 	) {}
 
@@ -40,9 +41,9 @@ final class BasicDocument implements Document, WritableDocument
 		}
 	}
 
-	public function get(string $path = ''): mixed
+	public function get(string $path = null): mixed
 	{
-		return $this->reference($path)->getValue();
+		return $this->reference($path ?? '')->getValue();
 	}
 
 	public function set(string $path, mixed $value): void
@@ -54,6 +55,7 @@ final class BasicDocument implements Document, WritableDocument
 			if (!isset($document[$key])) {
 				throw Path::notFound($path);
 			}
+			/** @var array<string, mixed> $document */
 			$document = &$document[$key];
 		}
 		$document = $value;
@@ -73,6 +75,7 @@ final class BasicDocument implements Document, WritableDocument
 			if (!isset($document[$key])) {
 				throw Path::notFound($path);
 			}
+			/** @var array<string, mixed> $document */
 			$document = &$document[$key];
 		}
 		$document = $value;
@@ -135,14 +138,20 @@ final class BasicDocument implements Document, WritableDocument
 		return $result;
 	}
 
+	/**
+	 * @param array<string, mixed> $document
+	 * @return array<string, string>
+	 */
 	private function findAll(array $document, string $searchField): array
 	{
 		$return = [];
 		foreach ($document as $field => $value) {
 			if ($searchField === $field) {
+				/** @var string $value */
 				$return['/' . $field] = $value;
 			}
 			elseif (is_array($value)) {
+				/** @var array<string, mixed> $value */
 				$rs = $this->findAll($value, $searchField);
 				foreach ($rs as $resultField => $resultValue) {
 					if (str_contains((string)$field, '/')) {
@@ -192,6 +201,7 @@ final class BasicDocument implements Document, WritableDocument
 
 		$accessor = new ArrayAccessor();
 
+		// @phpstan-ignore-next-line - phpstan is just wrong
 		while (($token = array_shift($tokens)) !== null) {
 			$token = $this->unescape($token);
 
@@ -199,7 +209,12 @@ final class BasicDocument implements Document, WritableDocument
 				break;
 			}
 
-			$target = $accessor->getValue($target, $token);
+			$value = $accessor->getValue($target, $token);
+			if (!is_array($value)) {
+				throw InvalidPointer::syntax($path);
+			}
+			/** @var array<string, mixed> $target */
+			$target = $value;
 		}
 
 		return new ReferencedValue($target, $token, $accessor);

@@ -7,6 +7,7 @@ use JsonPointer\Exceptions\Reference;
 final class ReferencedValue
 {
 	public function __construct(
+		/** @var array<string, mixed>|VoidValue */
 		private array|VoidValue $owner,
 		private readonly ?string $token = null,
 		private readonly ?ArrayAccessor $accessor = null,
@@ -20,7 +21,10 @@ final class ReferencedValue
 		$this->assertElementExists();
 	}
 
-	public function getValue()
+	/**
+	 * @return mixed|VoidValue
+	 */
+	public function getValue(): mixed
 	{
 		$this->assertElementExists();
 
@@ -49,6 +53,10 @@ final class ReferencedValue
 		}
 	}
 
+	/**
+	 * @phpstan-assert array<string, mixed> $this->owner
+	 * @phpstan-assert ArrayAccessor $this->accessor
+	 */
 	private function assertElementExists(): void
 	{
 		$this->assertOwnerExists();
@@ -57,11 +65,14 @@ final class ReferencedValue
 			return;
 		}
 
-		if (!$this->accessor->hasValue($this->owner, $this->token)) {
+		if (!$this->accessor?->hasValue($this->owner, $this->token)) {
 			throw Reference::elementNotFound($this->token);
 		}
 	}
 
+	/**
+	 * @phpstan-assert array<string, mixed> $this->owner
+	 */
 	private function assertOwnerExists(): void
 	{
 		if ($this->owner instanceof VoidValue) {

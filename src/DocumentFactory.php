@@ -58,6 +58,9 @@ final readonly class DocumentFactory
 		}
 
 		$content = file_get_contents($file);
+		if (!$content) {
+			throw DocumentParseError::invalidContent($file, 'File empty');
+		}
 		$errorMessage = null;
 		if (str_ends_with($file, '.json')) {
 			$doc = json_decode($content, true);
@@ -69,12 +72,16 @@ final readonly class DocumentFactory
 		else {
 			throw DocumentParseError::unknownFormat(substr($file, strrpos($file, '.') ?: 0));
 		}
-		if (!$doc || !is_array($doc)) {
+		if (!$doc || !is_array($doc) || array_is_list($doc)) {
 			throw DocumentParseError::invalidContent(basename($file), $errorMessage);
 		}
+		// @phpstan-ignore argument.type
 		return $this->createFromArray(basename($file), $doc);
 	}
 
+	/**
+	 * @param array{"$id"?: string, id?: string, ...} $data
+	 */
 	public function createFromArray(string $id, array $data): Document&WritableDocument
 	{
 		if (isset($data['$id'])) {

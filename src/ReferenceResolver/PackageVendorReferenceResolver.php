@@ -56,7 +56,7 @@ final class PackageVendorReferenceResolver implements ReferenceResolver
 
 		$document = $package?->resolveReference($packageReference);
 		if ($document) {
-			$reference->setRoot($package?->packageRoot);
+			$reference->setRoot($package->packageRoot);
 			return $document;
 		}
 		throw DocumentParseError::fileNotFound($reference->getUri());

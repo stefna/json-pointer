@@ -40,12 +40,12 @@ final class Reference
 
 	public function getName(): string
 	{
-		if ($this->type === ReferenceType::ComplexExternal) {
+		if ($this->type === ReferenceType::ComplexExternal && $this->uri) {
 			return pathinfo($this->uri, PATHINFO_FILENAME);
 		}
 		if ($this->path) {
 			$parts = array_filter(explode('/', $this->path));
-			return end($parts);
+			return (string)end($parts);
 		}
 		elseif ($this->uri) {
 			return pathinfo($this->uri, PATHINFO_FILENAME);

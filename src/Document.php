@@ -8,10 +8,16 @@ interface Document
 
 	public function has(string $path): bool;
 
-	public function get(string $path = ''): mixed;
+	/**
+	 * @return ($path is null ? array<string, mixed> : mixed)
+	 */
+	public function get(string $path = null): mixed;
 
 	public function findPathToParent(string $field, mixed $searchValue): string;
 
+	/**
+	 * @return array<string, string>
+	 */
 	public function findAllPaths(string $query): array;
 
 	public function canResolveReference(Reference $ref): bool;

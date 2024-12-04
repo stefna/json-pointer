@@ -49,12 +49,17 @@ final class Package
 		$mapDoc = $this->documentFactory->createFromFile($mapFile);
 		$resolvedReference = $mapDoc->resolveReference($ref);
 
-		if (isset($resolvedReference['$ref'])) {
+		if (
+			is_array($resolvedReference)
+			&& isset($resolvedReference['$ref'])
+			&& is_string($resolvedReference['$ref'])
+		) {
 			$newRef = Reference::fromString($resolvedReference['$ref']);
 			return $this->resolveExternalPackageReference($newRef);
 		}
 
 		if (is_array($resolvedReference)) {
+			// @phpstan-ignore argument.type
 			return $this->documentFactory->createFromArray($ref->getName(), $resolvedReference);
 		}
 

@@ -48,8 +48,11 @@ final class DocumentCollection implements Document
 		return '';
 	}
 
-	public function has(string $path): bool
+	public function has(?string $path): bool
 	{
+		if (!$path) {
+			return false;
+		}
 		foreach ($this->documents as $document) {
 			if ($document->has($path)) {
 				return true;
@@ -58,8 +61,11 @@ final class DocumentCollection implements Document
 		return false;
 	}
 
-	public function get(string $path = ''): mixed
+	public function get(string $path = null): mixed
 	{
+		if (!$path) {
+			return false;
+		}
 		foreach ($this->documents as $document) {
 			if ($document->has($path)) {
 				return $document->get($path);
