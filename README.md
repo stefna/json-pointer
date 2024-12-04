@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/stefna/json-pointer/actions/workflows/continuous-integration.yml/badge.svg?branch=main)](https://github.com/stefna/json-pointer/actions/workflows/continuous-integration.yml)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/stefna/json-pointer.svg)](https://packagist.org/packages/json-pointer)
-[![Software License](https://img.shields.io/github/license/json-pointer.svg)](LICENSE)
+[![Software License](https://img.shields.io/github/license/stefna/json-pointer.svg)](LICENSE.md)
 
 JSON Pointer implementation
 
