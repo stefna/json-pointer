@@ -2,6 +2,7 @@
 	"name": "stefna/json-pointer",
 	"description": "",
 	"type": "library",
+	"license": "MIT",
 	"authors": [
 		{
 			"name": "Andreas Sundqvist",
