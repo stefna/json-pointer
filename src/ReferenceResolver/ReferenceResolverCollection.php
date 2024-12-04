@@ -12,7 +12,7 @@ final class ReferenceResolverCollection implements ReferenceResolver
 	private array $referenceResolvers;
 
 	public function __construct(
-		ReferenceResolver ... $referenceResolvers,
+		ReferenceResolver ...$referenceResolvers,
 	) {
 		$this->referenceResolvers = $referenceResolvers;
 	}
@@ -43,7 +43,9 @@ final class ReferenceResolverCollection implements ReferenceResolver
 				try {
 					return $referenceResolver->resolve($reference);
 				}
-				catch (\Throwable $e) {}
+				catch (\Throwable $e) {
+					// $e might be forwarded to the DocumentParseError exception
+				}
 			}
 		}
 

@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 final class PackageReferenceResolverTest extends TestCase
 {
-
 	#[DataProvider('references')]
 	public function testReferenceResolving(string $reference, string $expectedId, string $expectedRoot): void
 	{
