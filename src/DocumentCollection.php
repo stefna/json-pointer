@@ -51,7 +51,7 @@ final class DocumentCollection implements Document
 	public function has(?string $path): bool
 	{
 		if (!$path) {
-			return false;
+			return true;
 		}
 		foreach ($this->documents as $document) {
 			if ($document->has($path)) {
@@ -63,9 +63,6 @@ final class DocumentCollection implements Document
 
 	public function get(string $path = null): mixed
 	{
-		if (!$path) {
-			return false;
-		}
 		foreach ($this->documents as $document) {
 			if ($document->has($path)) {
 				return $document->get($path);

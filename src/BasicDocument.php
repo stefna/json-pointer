@@ -30,8 +30,11 @@ final class BasicDocument implements Document, WritableDocument
 		return $this->id;
 	}
 
-	public function has(string $path): bool
+	public function has(?string $path): bool
 	{
+		if (!$path) {
+			return true;
+		}
 		try {
 			$this->reference($path)->hasValue();
 			return true;
