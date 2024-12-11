@@ -44,7 +44,7 @@ final class BasicDocument implements Document, WritableDocument
 		}
 	}
 
-	public function get(string $path = null): mixed
+	public function get(?string $path = null): mixed
 	{
 		return $this->reference($path ?? '')->getValue();
 	}

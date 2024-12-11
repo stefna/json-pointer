@@ -61,7 +61,7 @@ final class DocumentCollection implements Document
 		return false;
 	}
 
-	public function get(string $path = null): mixed
+	public function get(?string $path = null): mixed
 	{
 		foreach ($this->documents as $document) {
 			if ($document->has($path)) {

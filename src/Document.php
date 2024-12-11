@@ -6,12 +6,12 @@ interface Document
 {
 	public function getId(): string;
 
-	public function has(string $path): bool;
+	public function has(?string $path): bool;
 
 	/**
 	 * @return ($path is null ? array<string, mixed> : mixed)
 	 */
-	public function get(string $path = null): mixed;
+	public function get(?string $path = null): mixed;
 
 	public function findPathToParent(string $field, mixed $searchValue): string;
 
