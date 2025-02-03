@@ -32,7 +32,7 @@ final class Reference
 	}
 
 	private function __construct(
-		private readonly ReferenceType $type,
+		public readonly ReferenceType $type,
 		private readonly string $path,
 		private readonly ?string $uri = null,
 		private ?string $root = null,
